@@ -13,14 +13,25 @@ function timeAgo(iso) {
   return `${Math.floor(seconds / 86400)}d`;
 }
 
+function replyLabel(count) {
+  if (count === 0) return "Reply";
+  return count === 1 ? "1 reply" : `${count} replies`;
+}
+
 export default function PostCard({ post, onDeleted, linkToThread = true }) {
   const { me } = useAuth();
   const [liked, setLiked] = useState(post.liked_by_me);
   const [likes, setLikes] = useState(post.like_count);
   const author = post.author || { username: "unknown", display_name: "Unknown" };
   const mine = me && me.id === post.author_id;
+  const stop = (event) => event.stopPropagation();
 
-  const toggleLike = async () => {
+  const openThread = () => {
+    if (linkToThread) navigate(`/p/${post.id}`);
+  };
+
+  const toggleLike = async (event) => {
+    event.stopPropagation();
     if (!me) return navigate("/auth");
     setLiked(!liked);
     setLikes(likes + (liked ? -1 : 1));
@@ -32,20 +43,24 @@ export default function PostCard({ post, onDeleted, linkToThread = true }) {
     }
   };
 
-  const remove = async () => {
+  const remove = async (event) => {
+    event.stopPropagation();
     if (!window.confirm("Delete this post?")) return;
     await api.deletePost(post.id);
     onDeleted?.(post.id);
   };
 
   return (
-    <article className="post-card">
-      <Link to={`/u/${author.username}`}>
+    <article
+      className={`post-card ${linkToThread ? "clickable" : ""}`}
+      onClick={openThread}
+    >
+      <Link to={`/u/${author.username}`} onClick={stop}>
         <Avatar username={author.username} />
       </Link>
       <div className="post-body">
         <header className="post-header">
-          <Link to={`/u/${author.username}`} className="post-author">
+          <Link to={`/u/${author.username}`} className="post-author" onClick={stop}>
             {author.display_name}
           </Link>
           <span className="post-meta">
@@ -54,12 +69,8 @@ export default function PostCard({ post, onDeleted, linkToThread = true }) {
         </header>
         <p className="post-text">{post.text}</p>
         <footer className="post-actions">
-          {linkToThread ? (
-            <Link to={`/p/${post.id}`} className="action">
-              ◌ {post.reply_count}
-            </Link>
-          ) : (
-            <span className="action">◌ {post.reply_count}</span>
+          {linkToThread && (
+            <span className="action">◌ {replyLabel(post.reply_count)}</span>
           )}
           <button
             className={`action like ${liked ? "liked" : ""}`}

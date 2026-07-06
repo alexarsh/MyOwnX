@@ -1,0 +1,41 @@
+/* Design tokens — the single place where theming lives.
+   No other stylesheet may contain a literal color; structural
+   margins/paddings/gaps come from the spacing scale below. */
+
+:root {
+  /* palette */
+  --bg: #0a0c10;
+  --bg-glow-warm: #1a2110;
+  --bg-glow-cool: #10141f;
+  --panel: #12151d;
+  --panel-2: #181c26;
+  --border: #242a38;
+  --border-hover: #35405a;
+  --text: #eaedf5;
+  --muted: #8b93a8;
+  --accent: #d8ff4a;
+  --accent-dim: #a8cc2e;
+  --accent-ink: #161c00;
+  --accent-glow: rgb(216 255 74 / 10%);
+  --danger: #ff6b81;
+  --avatar-text: #fff;
+  --overlay: rgb(10 12 16 / 85%);
+  --shadow-ink: rgb(0 0 0 / 35%);
+  --glyph-stroke: #2e3752;
+
+  /* spacing scale — structural margins, paddings and gaps */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.5rem;
+  --space-2xl: 2rem;
+  --space-3xl: 3rem;
+
+  /* shape & type */
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
+  --serif: Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}

@@ -11,6 +11,24 @@ export default function Layout({ children }) {
   const { me, signOut } = useAuth();
   const { path } = useRoute();
 
+  // Logged-out visitors on deep links (profiles, threads, search) get a
+  // slim top bar with a single way in — the app shell is for members.
+  if (!me) {
+    return (
+      <div className="solo-layout">
+        <header className="topbar">
+          <Link to="/" className="brand">
+            MyOwn<span className="brand-x">X</span>
+          </Link>
+          <Link to="/auth" className="btn primary">
+            Sign in
+          </Link>
+        </header>
+        <main className="content solo-content">{children}</main>
+      </div>
+    );
+  }
+
   return (
     <div className="layout">
       <aside className="sidebar">
@@ -28,38 +46,29 @@ export default function Layout({ children }) {
               <span className="nav-label">{item.label}</span>
             </Link>
           ))}
-          {me && (
-            <Link
-              to={`/u/${me.username}`}
-              className={`nav-link ${path === `/u/${me.username}` ? "active" : ""}`}
-            >
-              <span className="nav-icon">◉</span>
-              <span className="nav-label">Profile</span>
-            </Link>
-          )}
-          {!me && (
-            <Link to="/auth" className="btn primary block join-btn">
-              Join in
-            </Link>
-          )}
+          <Link
+            to={`/u/${me.username}`}
+            className={`nav-link ${path === `/u/${me.username}` ? "active" : ""}`}
+          >
+            <span className="nav-icon">◉</span>
+            <span className="nav-label">Profile</span>
+          </Link>
         </nav>
-        {me && (
-          <div className="sidebar-footer">
-            <Link to={`/u/${me.username}`} className="me-chip">
-              <Avatar username={me.username} size={34} />
-              <span className="me-name">@{me.username}</span>
-            </Link>
-            <button
-              className="btn ghost"
-              onClick={() => {
-                signOut();
-                navigate("/");
-              }}
-            >
-              Sign out
-            </button>
-          </div>
-        )}
+        <div className="sidebar-footer">
+          <Link to={`/u/${me.username}`} className="me-chip">
+            <Avatar username={me.username} size={34} />
+            <span className="me-name">@{me.username}</span>
+          </Link>
+          <button
+            className="btn ghost"
+            onClick={() => {
+              signOut();
+              navigate("/");
+            }}
+          >
+            Sign out
+          </button>
+        </div>
       </aside>
       <main className="content">{children}</main>
     </div>

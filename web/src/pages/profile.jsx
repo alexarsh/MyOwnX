@@ -59,7 +59,7 @@ export default function Profile({ username }) {
             className={`btn ${profile.followed_by_me ? "ghost" : "primary"}`}
             onClick={toggleFollow}
           >
-            {profile.followed_by_me ? "Following ✓" : "Follow"}
+            {profile.followed_by_me ? "Unfollow" : "Follow"}
           </button>
         )}
       </header>

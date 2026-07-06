@@ -4,8 +4,8 @@
   flex-direction: column;
   gap: 1.25rem;
   position: sticky;
-  top: 1.5rem;
-  height: calc(100vh - 3rem);
+  top: var(--space-xl);
+  height: calc(100vh - 2 * var(--space-xl));
 }
 
 .brand {
@@ -25,7 +25,7 @@
   align-items: center;
   gap: 0.7rem;
   padding: 0.55rem 0.9rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   color: var(--muted);
   font-weight: 500;
 }
@@ -43,8 +43,20 @@
   font-size: 0.8rem;
 }
 
-.join-btn {
-  margin-top: 0.5rem;
+/* ---- logged-out chrome ---- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 660px;
+  margin: 0 auto;
+  padding: var(--space-lg);
+}
+
+.solo-content {
+  max-width: 620px;
+  margin: var(--space-sm) auto var(--space-2xl);
+  padding: 0 var(--space-lg);
 }
 
 .sidebar-footer {
@@ -63,7 +75,7 @@
 
 /* ---- buttons ---- */
 .btn {
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 0.5rem 1.2rem;
   font-weight: 600;
   transition: transform 0.08s ease, filter 0.15s ease;
@@ -115,30 +127,79 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  color: #fff;
+  color: var(--avatar-text);
   flex-shrink: 0;
-  text-shadow: 0 1px 2px rgb(0 0 0 / 35%);
+  text-shadow: 0 1px 2px var(--shadow-ink);
 }
 
-/* ---- hero (logged out) ---- */
-.hero {
-  padding: 4rem 0;
+/* ---- landing (logged out) ---- */
+.landing {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: var(--space-2xl);
+  min-height: 100vh;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-xl);
 }
 
-.hero-title {
+.landing-side {
+  display: flex;
+  justify-content: center;
+}
+
+.landing-glyph {
   font-family: var(--serif);
-  font-size: 3.4rem;
-  line-height: 1.1;
-  margin-bottom: 1rem;
+  font-style: italic;
+  font-size: clamp(12rem, 30vw, 26rem);
+  line-height: 0.9;
+  color: transparent;
+  -webkit-text-stroke: 3px var(--glyph-stroke);
+  filter: drop-shadow(0 0 70px var(--accent-glow));
+  user-select: none;
 }
 
-.hero-title em {
+.landing-main {
+  max-width: 380px;
+  width: 100%;
+}
+
+.landing-brand {
+  font-size: 1.4rem;
+  margin-bottom: 2.5rem;
+}
+
+.landing-title {
+  font-family: var(--serif);
+  font-size: 3.2rem;
+  line-height: 1.05;
+  margin-bottom: 0.9rem;
+}
+
+.landing-title em {
   color: var(--accent);
 }
 
-.hero-sub {
+.landing-sub {
   color: var(--muted);
-  font-size: 1.15rem;
-  max-width: 32rem;
-  margin-bottom: 2rem;
+  font-size: 1.05rem;
+  margin-bottom: var(--space-2xl);
+}
+
+@media (max-width: 860px) {
+  .landing {
+    grid-template-columns: 1fr;
+    align-content: center;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .landing-side {
+    display: none;
+  }
+
+  .landing-title {
+    font-size: 2.6rem;
+  }
 }

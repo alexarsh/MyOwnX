@@ -15,12 +15,22 @@ export default function Thread({ postId }) {
 
   useEffect(load, [load]);
 
+  const goBack = () => {
+    if (window.history.length > 1) window.history.back();
+    else navigate("/");
+  };
+
   if (error) return <p className="state-msg">{error}</p>;
   if (!thread) return <p className="state-msg">Loading…</p>;
 
   return (
     <>
-      <h2 className="page-title">Thread</h2>
+      <header className="page-header">
+        <button className="back-btn" onClick={goBack} aria-label="Go back">
+          ←
+        </button>
+        <h2 className="page-title">Thread</h2>
+      </header>
       <PostCard
         post={thread.post}
         linkToThread={false}

@@ -4,7 +4,7 @@ import { api } from "../api.js";
 import { useAuth } from "../auth-context.jsx";
 import { navigate } from "../router.jsx";
 
-export default function Auth() {
+export default function AuthPanel() {
   const { signIn } = useAuth();
   const [mode, setMode] = useState("signup");
   const [form, setForm] = useState({ username: "", display_name: "", password: "" });
@@ -18,8 +18,13 @@ export default function Auth() {
     setBusy(true);
     setError(null);
     try {
-      const call = mode === "signup" ? api.signup(form) : api.login(form);
-      const { access_token } = await call;
+      const { access_token } =
+        mode === "signup"
+          ? await api.signup({
+              ...form,
+              display_name: form.display_name || form.username,
+            })
+          : await api.login({ username: form.username, password: form.password });
       await signIn(access_token);
       navigate("/");
     } catch (err) {
@@ -30,16 +35,13 @@ export default function Auth() {
   };
 
   return (
-    <div className="auth-page">
-      <h1 className="page-title">
-        {mode === "signup" ? "Claim your handle" : "Welcome back"}
-      </h1>
+    <div className="auth-panel">
       <div className="tabs">
         <button
           className={mode === "signup" ? "tab active" : "tab"}
           onClick={() => setMode("signup")}
         >
-          Sign up
+          Create account
         </button>
         <button
           className={mode === "login" ? "tab active" : "tab"}
@@ -49,37 +51,33 @@ export default function Auth() {
         </button>
       </div>
       <form className="auth-form" onSubmit={submit}>
-        <label>
-          Username
-          <input
-            value={form.username}
-            onChange={set("username")}
-            placeholder="lowercase, digits, _"
-            autoFocus
-          />
-        </label>
+        <input
+          value={form.username}
+          onChange={set("username")}
+          placeholder="username — lowercase, digits, _"
+          aria-label="Username"
+        />
         {mode === "signup" && (
-          <label>
-            Display name
-            <input
-              value={form.display_name}
-              onChange={set("display_name")}
-              placeholder="How you'll appear"
-            />
-          </label>
-        )}
-        <label>
-          Password
           <input
-            type="password"
-            value={form.password}
-            onChange={set("password")}
-            placeholder="At least 8 characters"
+            value={form.display_name}
+            onChange={set("display_name")}
+            placeholder="display name (optional)"
+            aria-label="Display name"
           />
-        </label>
+        )}
+        <input
+          type="password"
+          value={form.password}
+          onChange={set("password")}
+          placeholder="password — at least 8 characters"
+          aria-label="Password"
+        />
         {error && <p className="form-error">{error}</p>}
-        <button className="btn primary big" disabled={busy}>
-          {mode === "signup" ? "Create account" : "Log in"}
+        <button
+          className="btn primary big block"
+          disabled={busy || !form.username || !form.password}
+        >
+          {mode === "signup" ? "Join MyOwnX" : "Log in"}
         </button>
       </form>
     </div>

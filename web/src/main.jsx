@@ -1,7 +1,10 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+
 import App from "./app.jsx";
 import "./styles/base.css";
+import "./styles/ui.css";
+import "./styles/cards.css";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>

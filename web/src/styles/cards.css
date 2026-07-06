@@ -1,0 +1,222 @@
+/* ---- composer ---- */
+.composer {
+  display: flex;
+  gap: 0.8rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.composer-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.composer textarea {
+  resize: vertical;
+  background: transparent;
+  border: none;
+  padding: 0.2rem 0;
+}
+
+.composer textarea:focus {
+  outline: none;
+}
+
+.composer-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.9rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.7rem;
+}
+
+.char-count {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.char-count.warn {
+  color: var(--danger);
+}
+
+/* ---- post cards ---- */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.post-card {
+  display: flex;
+  gap: 0.8rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  transition: border-color 0.15s ease;
+}
+
+.post-card:hover {
+  border-color: #35405a;
+}
+
+.post-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.post-author {
+  font-weight: 700;
+}
+
+.post-author:hover {
+  text-decoration: underline;
+}
+
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.post-text {
+  margin: 0.25rem 0 0.6rem;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.post-actions {
+  display: flex;
+  gap: 1.6rem;
+}
+
+.action {
+  color: var(--muted);
+  font-size: 0.92rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.action:hover {
+  color: var(--accent);
+}
+
+.action.like.liked {
+  color: var(--danger);
+}
+
+.action.danger:hover {
+  color: var(--danger);
+}
+
+.thread-replies {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-left: 2px solid var(--border);
+  padding-left: 0.9rem;
+}
+
+/* ---- profile / search / auth ---- */
+.profile-header {
+  display: flex;
+  gap: 1.1rem;
+  align-items: flex-start;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-bio {
+  margin: 0.4rem 0;
+}
+
+.profile-stats {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.profile-stats strong {
+  color: var(--text);
+}
+
+.user-card {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.user-card:hover {
+  border-color: #35405a;
+}
+
+.search-input {
+  margin-bottom: 0.9rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  color: var(--muted);
+  border: 1px solid transparent;
+}
+
+.tab.active {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.auth-page {
+  max-width: 24rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.form-error {
+  color: var(--danger);
+  font-size: 0.9rem;
+}

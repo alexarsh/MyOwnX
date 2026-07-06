@@ -9,7 +9,8 @@ async def test_profile_counts_and_404(client):
     missing = await client.get("/api/users/nobody")
     body = profile.json()
     assert profile.status_code == 200
-    assert (body["followers"], body["following"], body["followed_by_me"]) == (0, 0, False)
+    state = (body["followers"], body["following"], body["followed_by_me"])
+    assert state == (0, 0, False)
     assert missing.status_code == 404
 
 

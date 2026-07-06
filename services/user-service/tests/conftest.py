@@ -9,12 +9,11 @@ os.environ["DATABASE_URL"] = os.environ.get(
 os.environ.setdefault("JWT_SECRET", "test-secret")
 
 import pytest  # noqa: E402
-from httpx import ASGITransport, AsyncClient  # noqa: E402
-from sqlalchemy import delete  # noqa: E402
-
 from app.db import SessionLocal, engine  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models import Base, Follow, User  # noqa: E402
+from httpx import ASGITransport, AsyncClient  # noqa: E402
+from sqlalchemy import delete  # noqa: E402
 
 
 @pytest.fixture(scope="session", autouse=True)

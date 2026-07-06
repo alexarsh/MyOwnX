@@ -1,5 +1,7 @@
 # MyOwnX
 
+![CI](https://github.com/alexarsh/MyOwnX/actions/workflows/ci.yml/badge.svg)
+
 A Twitter/X-style social network built as Python microservices with a
 React frontend, orchestrated by Docker Compose.
 
@@ -55,6 +57,16 @@ scripts/e2e.sh         # full user journey in an isolated throwaway stack
 ```
 
 Test data never touches the dev databases.
+
+## CI
+
+Every push runs four GitHub Actions jobs ([ci.yml](.github/workflows/ci.yml)):
+
+1. **lint** — ruff + file-size limits (python ≤ 200 lines, js ≤ 100)
+2. **test** — pytest per service against Postgres, including a migration
+   round-trip (`upgrade → downgrade → upgrade`) proving reversibility
+3. **web-build** — production frontend build
+4. **e2e** — the full user journey in an isolated compose stack
 
 Migrations are reversible; verify with
 `docker compose exec user-service alembic downgrade base && ... upgrade head`.

@@ -7,7 +7,8 @@ async def test_create_post(client):
     post = await create_post(client, user_id=1, text="first!")
     assert post["text"] == "first!"
     assert post["author_id"] == 1
-    assert (post["like_count"], post["reply_count"], post["liked_by_me"]) == (0, 0, False)
+    state = (post["like_count"], post["reply_count"], post["liked_by_me"])
+    assert state == (0, 0, False)
 
 
 async def test_create_requires_auth_and_valid_text(client):

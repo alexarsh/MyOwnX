@@ -34,8 +34,9 @@ async def test_internal_posts_cursor_pagination(client):
     assert [p["text"] for p in first["items"]] == ["post 4", "post 3"]
     assert first["next_cursor"] is not None
 
+    cursor = first["next_cursor"]
     second = (
-        await client.get(f"/internal/posts?author_ids=1&limit=2&cursor={first['next_cursor']}")
+        await client.get(f"/internal/posts?author_ids=1&limit=2&cursor={cursor}")
     ).json()
     assert [p["text"] for p in second["items"]] == ["post 2", "post 1"]
 

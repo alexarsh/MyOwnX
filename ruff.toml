@@ -1,0 +1,13 @@
+line-length = 88
+target-version = "py312"
+
+[lint]
+select = ["E", "F", "I", "W", "B"]
+# B008: `Depends(...)` in argument defaults is the standard FastAPI idiom
+ignore = ["B008"]
+
+[lint.per-file-ignores]
+# conftest files must set env vars before importing the app
+"**/tests/*" = ["E402"]
+# HTTPException raises inside except blocks are intentional (no chaining)
+"**/app/**" = ["B904"]

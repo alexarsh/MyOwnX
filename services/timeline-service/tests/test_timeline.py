@@ -1,6 +1,7 @@
 """Timeline composition and search aggregation over faked upstreams."""
 
 from app import clients
+
 from tests.conftest import auth, make_post, make_user
 
 

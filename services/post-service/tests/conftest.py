@@ -11,12 +11,11 @@ os.environ.setdefault("JWT_SECRET", "test-secret")
 
 import jwt  # noqa: E402
 import pytest  # noqa: E402
-from httpx import ASGITransport, AsyncClient  # noqa: E402
-from sqlalchemy import delete  # noqa: E402
-
 from app.db import SessionLocal, engine  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models import Base, Like, Post  # noqa: E402
+from httpx import ASGITransport, AsyncClient  # noqa: E402
+from sqlalchemy import delete  # noqa: E402
 
 
 @pytest.fixture(scope="session", autouse=True)

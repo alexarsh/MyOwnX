@@ -1,0 +1,94 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ruff
+      - run: ruff check services
+      - name: enforce file-size limits (py<=200, js<=100 lines)
+        run: scripts/check-file-sizes.sh
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: user-service
+            db_user: user_service
+            db_password: user_service_pw
+            db_name: users_test_db
+          - service: post-service
+            db_user: post_service
+            db_password: post_service_pw
+            db_name: posts_test_db
+          - service: timeline-service
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ${{ matrix.db_user || 'admin' }}
+          POSTGRES_PASSWORD: ${{ matrix.db_password || 'admin_pw' }}
+          POSTGRES_DB: ${{ matrix.db_name || 'postgres' }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 15
+    defaults:
+      run:
+        working-directory: services/${{ matrix.service }}
+    env:
+      JWT_SECRET: ci-only-secret-0123456789abcdef0123456789abcdef
+      DATABASE_URL: postgresql+asyncpg://${{ matrix.db_user }}:${{ matrix.db_password }}@localhost:5432/${{ matrix.db_name }}
+      TEST_DATABASE_URL: postgresql+asyncpg://${{ matrix.db_user }}:${{ matrix.db_password }}@localhost:5432/${{ matrix.db_name }}
+      USER_SERVICE_URL: http://localhost:9001
+      POST_SERVICE_URL: http://localhost:9002
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt -r ../../shared/requirements-dev.txt
+      - name: migration round-trip (upgrade -> downgrade -> upgrade)
+        if: ${{ matrix.db_user }}
+        run: |
+          alembic upgrade head
+          alembic downgrade base
+          alembic upgrade head
+      - run: python -m pytest -q
+
+  web-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run build
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: full user journey in an isolated compose stack
+        run: scripts/e2e.sh

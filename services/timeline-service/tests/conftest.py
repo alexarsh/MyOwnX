@@ -9,9 +9,8 @@ os.environ.setdefault("POST_SERVICE_URL", "http://post-service.test")
 
 import jwt  # noqa: E402
 import pytest  # noqa: E402
-from httpx import ASGITransport, AsyncClient  # noqa: E402
-
 from app.main import app  # noqa: E402
+from httpx import ASGITransport, AsyncClient  # noqa: E402
 
 
 @pytest.fixture

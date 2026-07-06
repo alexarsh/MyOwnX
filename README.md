@@ -16,6 +16,12 @@ docker compose up --build
 Then open **http://localhost:3000** and create an account right on the
 landing page (username + password — it's a demo, use throwaway values).
 
+Want instant content? Seed demo users, posts, follows and likes:
+
+```bash
+scripts/seed.sh   # creates ada, linus, grace (password: demo-password-123)
+```
+
 ## Architecture at a glance
 
 | Service | Role | Port |

@@ -36,6 +36,22 @@ async def home_timeline(
     return await _with_authors(page)
 
 
+@router.get("/thread/{post_id}")
+async def thread(
+    post_id: int,
+    viewer_id: int | None = Depends(optional_user_id),
+):
+    data = await clients.thread(post_id, viewer_id)
+    posts = [data["post"], *data["replies"]]
+    authors = await clients.users_by_ids(sorted({p["author_id"] for p in posts}))
+    data["post"] = {**data["post"], "author": authors.get(data["post"]["author_id"])}
+    data["replies"] = [
+        {**reply, "author": authors.get(reply["author_id"])}
+        for reply in data["replies"]
+    ]
+    return data
+
+
 @router.get("/user/{username}")
 async def user_timeline(
     username: str,

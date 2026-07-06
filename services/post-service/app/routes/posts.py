@@ -1,11 +1,10 @@
 """Create, read (thread view) and delete posts."""
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_session
-from app.enrich import hydrate
+from app.enrich import hydrate, load_thread
 from app.models import Post
 from app.schemas import PostCreate, PostOut, ThreadOut
 from app.security import current_user_id, optional_user_id
@@ -39,15 +38,10 @@ async def thread(
     viewer_id: int | None = Depends(optional_user_id),
     session: AsyncSession = Depends(get_session),
 ):
-    post = await session.get(Post, post_id)
-    if post is None:
+    result = await load_thread(session, post_id, viewer_id)
+    if result is None:
         raise HTTPException(status_code=404, detail="Post not found")
-    replies_result = await session.execute(
-        select(Post).where(Post.reply_to_id == post_id).order_by(Post.id)
-    )
-    replies = list(replies_result.scalars())
-    hydrated = await hydrate(session, [post, *replies], viewer_id)
-    return ThreadOut(post=hydrated[0], replies=hydrated[1:])
+    return result
 
 
 @router.delete("/{post_id}", status_code=204)

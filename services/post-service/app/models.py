@@ -39,8 +39,10 @@ class Post(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
+    # 'simple' config: no stopwords — short posts like "All good" must be
+    # findable even when every word is a common one.
     search_vector: Mapped[str] = mapped_column(
-        TSVECTOR, Computed("to_tsvector('english', text)", persisted=True)
+        TSVECTOR, Computed("to_tsvector('simple', text)", persisted=True)
     )
 
 

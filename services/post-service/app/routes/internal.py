@@ -1,14 +1,13 @@
 """Internal endpoints consumed by timeline-service."""
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_session
-from app.enrich import hydrate
+from app.enrich import hydrate, load_thread
 from app.models import Post
-from app.schemas import PageOut
-from app.security import current_user_id
+from app.schemas import PageOut, ThreadOut
 
 router = APIRouter(prefix="/internal/posts", tags=["internal"])
 
@@ -46,9 +45,21 @@ async def search_posts(
 ):
     query = (
         select(Post)
-        .where(Post.search_vector.op("@@")(func.plainto_tsquery("english", q)))
+        .where(Post.search_vector.op("@@")(func.plainto_tsquery("simple", q)))
         .order_by(Post.id.desc())
         .limit(limit)
     )
     posts = list((await session.execute(query)).scalars())
     return PageOut(items=await hydrate(session, posts, viewer_id), next_cursor=None)
+
+
+@router.get("/{post_id}/thread", response_model=ThreadOut)
+async def thread(
+    post_id: int,
+    viewer_id: int | None = Query(default=None),
+    session: AsyncSession = Depends(get_session),
+):
+    result = await load_thread(session, post_id, viewer_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return result

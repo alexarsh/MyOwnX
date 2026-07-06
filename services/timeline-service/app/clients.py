@@ -63,6 +63,14 @@ async def posts_by_authors(
     return (await _get(url, params)).json()
 
 
+async def thread(post_id: int, viewer_id: int | None) -> dict:
+    params: dict = {}
+    if viewer_id is not None:
+        params["viewer_id"] = viewer_id
+    url = f"{settings.post_service_url}/internal/posts/{post_id}/thread"
+    return (await _get(url, params)).json()
+
+
 async def search_posts(q: str, limit: int, viewer_id: int | None) -> dict:
     params: dict = {"q": q, "limit": limit}
     if viewer_id is not None:

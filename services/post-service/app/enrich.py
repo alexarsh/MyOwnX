@@ -8,7 +8,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Like, Post
-from app.schemas import PostOut
+from app.schemas import PostOut, ThreadOut
 
 
 async def hydrate(
@@ -54,3 +54,17 @@ async def hydrate(
         )
         for post in posts
     ]
+
+
+async def load_thread(
+    session: AsyncSession, post_id: int, viewer_id: int | None
+) -> ThreadOut | None:
+    post = await session.get(Post, post_id)
+    if post is None:
+        return None
+    replies_result = await session.execute(
+        select(Post).where(Post.reply_to_id == post_id).order_by(Post.id)
+    )
+    replies = list(replies_result.scalars())
+    hydrated = await hydrate(session, [post, *replies], viewer_id)
+    return ThreadOut(post=hydrated[0], replies=hydrated[1:])

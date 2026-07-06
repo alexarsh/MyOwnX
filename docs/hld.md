@@ -128,7 +128,10 @@ history (`services/<name>/migrations/`). Every migration implements both
 
 Postgres bootstrap: an init script (mounted into the postgres container
 only) creates one database + one role per service; each role can only
-access its own database.
+access its own database. This is the single deliberate exception to the
+"ORM only" rule: databases and roles are cluster-level infrastructure
+that no ORM models — all application queries use the SQLAlchemy ORM and
+all schema changes use Alembic operations.
 
 ## 7. Repository layout
 

@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin_pw
+    ports:
+      - "9432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+      - ./shared/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  user-service:
+    build: ./services/user-service
+    ports:
+      - "9001:9001"
+    env_file: ./shared/app.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://user_service:user_service_pw@postgres:5432/users_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  post-service:
+    build: ./services/post-service
+    ports:
+      - "9002:9002"
+    env_file: ./shared/app.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://post_service:post_service_pw@postgres:5432/posts_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  timeline-service:
+    build: ./services/timeline-service
+    ports:
+      - "9003:9003"
+    env_file: ./shared/app.env
+    depends_on:
+      - user-service
+      - post-service
+
+  web:
+    build: ./web
+    ports:
+      - "3000:80"
+    depends_on:
+      - user-service
+      - post-service
+      - timeline-service

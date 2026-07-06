@@ -1,0 +1,18 @@
+# runtime data (postgres volume)
+data/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# node
+node_modules/
+dist/
+
+# editors / os
+.DS_Store
+.idea/
+.vscode/

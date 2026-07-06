@@ -2,7 +2,12 @@
 
 from fastapi import FastAPI
 
-app = FastAPI(title="post-service", version="0.1.0")
+from app.routes import internal, likes, posts
+
+app = FastAPI(title="post-service", version="1.0.0")
+app.include_router(posts.router)
+app.include_router(likes.router)
+app.include_router(internal.router)
 
 
 @app.get("/health")

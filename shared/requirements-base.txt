@@ -1,0 +1,7 @@
+# Dependencies shared by all services (used by more than two services).
+# Service-specific requirements.txt files include this via `-r` and add
+# only their own unique dependencies.
+fastapi~=0.115
+uvicorn[standard]~=0.32
+pyjwt~=2.10
+pydantic-settings~=2.6

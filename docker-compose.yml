@@ -16,7 +16,9 @@ services:
       retries: 15
 
   user-service:
-    build: ./services/user-service
+    build:
+      context: .
+      dockerfile: services/user-service/Dockerfile
     ports:
       - "9001:9001"
     env_file: ./shared/app.env
@@ -27,7 +29,9 @@ services:
         condition: service_healthy
 
   post-service:
-    build: ./services/post-service
+    build:
+      context: .
+      dockerfile: services/post-service/Dockerfile
     ports:
       - "9002:9002"
     env_file: ./shared/app.env
@@ -38,7 +42,9 @@ services:
         condition: service_healthy
 
   timeline-service:
-    build: ./services/timeline-service
+    build:
+      context: .
+      dockerfile: services/timeline-service/Dockerfile
     ports:
       - "9003:9003"
     env_file: ./shared/app.env

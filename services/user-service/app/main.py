@@ -2,7 +2,12 @@
 
 from fastapi import FastAPI
 
-app = FastAPI(title="user-service", version="0.1.0")
+from app.routes import auth, internal, profiles
+
+app = FastAPI(title="user-service", version="1.0.0")
+app.include_router(auth.router)
+app.include_router(profiles.router)
+app.include_router(internal.router)
 
 
 @app.get("/health")

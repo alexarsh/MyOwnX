@@ -63,7 +63,7 @@ likes  (user_id BIGINT, post_id FK→posts, created_at,
 by ID only; integrity across services is by API contract, not FK.
 
 **Indexes (performance):**
-- `posts (author_id, created_at DESC)` — profile pages & timeline fan-in
+- `posts (author_id, id)` — profile pages & timeline fan-in (keyset scans)
 - `posts (reply_to_id)` — thread lookups
 - `GIN (search_vector)` — full-text search
 - `follows (follower_id)` — "who do I follow" (timeline)
@@ -108,7 +108,7 @@ GET /api/timeline
 ```
 
 Exactly **3 internal calls** per timeline page regardless of page size.
-Pagination is cursor-based (`created_at,id` keyset) — stable under inserts
+Pagination is cursor-based (keyset on `id`) — stable under inserts
 and cheaper than OFFSET.
 
 ## 5. Auth flow

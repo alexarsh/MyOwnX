@@ -11,7 +11,8 @@ React frontend, orchestrated by Docker Compose.
 docker compose up --build
 ```
 
-Then open **http://localhost:3000**.
+Then open **http://localhost:3000** and create an account right on the
+landing page (username + password — it's a demo, use throwaway values).
 
 ## Architecture at a glance
 
@@ -39,6 +40,21 @@ data/       runtime data volumes (gitignored)
 
 ## Development
 
-Each service is self-contained (own `requirements.txt`, own image).
+Each service is self-contained (own `requirements.txt`, own image);
+dependencies shared by all services live in `shared/requirements-base.txt`.
 Interactive API docs are available at `http://localhost:900{1,2,3}/docs`
 when running.
+
+## Testing
+
+```bash
+scripts/run-tests.sh   # pytest per service, in containers, vs dedicated
+                       # test DBs (schema dropped after the run)
+scripts/e2e.sh         # full user journey in an isolated throwaway stack
+                       # (tmpfs postgres, destroyed afterwards)
+```
+
+Test data never touches the dev databases.
+
+Migrations are reversible; verify with
+`docker compose exec user-service alembic downgrade base && ... upgrade head`.

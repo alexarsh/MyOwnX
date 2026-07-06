@@ -1,0 +1,23 @@
+# Overlay for an isolated, throwaway e2e stack (scripts/e2e.sh):
+#   - postgres data on tmpfs (nothing persisted, destroyed with the stack)
+#   - no host ports except the gateway on 3100 (dev stack stays untouched)
+services:
+  postgres:
+    ports: !reset []
+    volumes: !override
+      - ./shared/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  user-service:
+    ports: !reset []
+
+  post-service:
+    ports: !reset []
+
+  timeline-service:
+    ports: !reset []
+
+  web:
+    ports: !override
+      - "3100:80"

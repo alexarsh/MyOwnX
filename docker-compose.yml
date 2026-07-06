@@ -16,6 +16,7 @@ services:
       retries: 15
 
   user-service:
+    restart: on-failure
     build:
       context: .
       dockerfile: services/user-service/Dockerfile
@@ -29,6 +30,7 @@ services:
         condition: service_healthy
 
   post-service:
+    restart: on-failure
     build:
       context: .
       dockerfile: services/post-service/Dockerfile
@@ -42,6 +44,7 @@ services:
         condition: service_healthy
 
   timeline-service:
+    restart: on-failure
     build:
       context: .
       dockerfile: services/timeline-service/Dockerfile
